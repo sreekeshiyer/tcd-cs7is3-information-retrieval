@@ -39,10 +39,21 @@ public class CranfieldQuery {
         if (rawText == null || rawText.isEmpty()) {
             return "";
         }
-        // Remove question marks, asterisks, brackets, quotes, slashes, etc.
-        String cleaned = rawText.replaceAll("[^a-zA-Z0-9\\s]", " ");
-        // Normalize whitespace
-        return cleaned.replaceAll("\\s+", " ").trim();
+        // Remove Cranfield typographical artifact "-dash"
+        String cleaned = rawText.replaceAll("-dash", " ");
+        //Remove punctuation and Lucene special syntax characters
+        cleaned = cleaned.replaceAll("[^a-zA-Z0-9\\s]", " ");
+        // Remove conversational question boilerplate words that introduce false-positive matches 
+        cleaned = cleaned.replaceAll("(?i)\\b(what|which|where|when|why|how|who|can|could|would|should|is|are|was|were|be|been|being|do|does|did|has|have|had)\\b", " ");
+        cleaned = cleaned.replaceAll("(?i)\\b(papers|paper|studies|study|investigation|literature|work|criterion|criteria|dash)\\b", " ");
+        cleaned = cleaned.replaceAll("(?i)\\b(possible|available|presently|found|give|given|describe|described|discuss|discussed|find|show|shown|solved|so far)\\b", " ");
+        // 4. Normalize whitespace
+        String result = cleaned.replaceAll("\\s+", " ").trim();
+        // Fallback to basic sanitized text if all words were stripped
+        if (result.isEmpty()) {
+            return rawText.replaceAll("[^a-zA-Z0-9\\s]", " ").replaceAll("\\s+", " ").trim();
+        }
+        return result;
     }
 
     @Override

@@ -152,15 +152,6 @@ public class App {
             return;
         }
 
-        // Ensure QRels are converted
-        if (new File(qrelsPath).exists()) {
-            File trecQrels = new File("data/QRelsCorrectedforTRECeval");
-            if (!trecQrels.exists()) {
-                System.out.println("Generating TREC qrels at " + trecQrels.getPath());
-                CranfieldParser.convertQrelsToTrec(qrelsPath, trecQrels.getPath(), true);
-            }
-        }
-
         ExperimentRunner.runAll(documents, queries, resultsDir);
     }
 
