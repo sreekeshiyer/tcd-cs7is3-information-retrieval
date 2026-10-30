@@ -2,3 +2,4 @@ cs7is3-lucene-tutorial-examples/
 **/**/trec_eval**/
 index/
 target/
+__pycache__
